@@ -10,12 +10,13 @@ _user = UserDto.user
 """Definicja zapytań do API
 czcyli  w tej chwili jest get users, post user i get one user"""
 
+
 @api.route('/')
 class UserList(Resource):
     @api.doc('list_of_registered_users')
     @api.marshal_list_with(_user, envelope='data')
     def get(self):
-        """List all registered users, chyba to jest wlasnie to marashalowanie"""
+        """List all registered users"""
         return get_all_users()
 
     @api.response(201, 'user Succesfully created.')

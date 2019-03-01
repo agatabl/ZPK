@@ -1,0 +1,1 @@
+sciezka do venv: C:\Users\agata\Environments\ZPK_venv

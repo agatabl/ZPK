@@ -4,6 +4,7 @@ import jwt
 from app.main.model.blacklist import BlacklistToken
 from ..config import key
 
+
 class User(db.Model):
     """Schemat użytkownika do przrchowywania informacji o nim"""
     __tablename__ = 'user'
@@ -16,7 +17,6 @@ class User(db.Model):
     username = db.Column(db.String(50), unique=True)
     password_hash = db.Column(db.String(100))
 
-
     @property
     def password(self):
         raise AttributeError('password: write-only filed')
@@ -28,35 +28,31 @@ class User(db.Model):
     def check_password(self, password):
         return flask_bcrypt.check_password_hash(self.password_hash, password)
 
-    def __repr__(self):
-        return f"<User {self.username}>"
+    @staticmethod
+    def encode_auth_token(self, user_id):
+        """
+        Generates the Auth Token
+        :return: string
+        """
 
+        try:
+            payload = {
 
-def encode_auth_token(self, user_id):
-    """
-    Generates the Auth Token
-    :return: string
-    """
+                'exp': datetime.datetime.utcnow() + datetime.timedelta(days=1, seconds=5),
+                'iat': datetime.datetime.utcnow(),
+                'sub': user_id
+            }
 
-    try:
-        payload = {
+            return jwt.encode(
+                payload,
+                key,
+                algorithm='HS256'
+            )
+        except Exception as e:
+            return e
 
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(days=1, seconds=5),
-            'iat': datetime.datetime.utcnow(),
-            'sub': user_id
-        }
-
-        return jwt.encode(
-            payload,
-            key,
-            algorithm='HS256'
-        )
-    except Exception as e:
-        return e
-
-
-@staticmethod
-def decode_auth_token(auth_token):
+    @staticmethod
+    def decode_auth_token(auth_token):
         """
         Decodes the auth token
         :param auth_token:
@@ -73,3 +69,6 @@ def decode_auth_token(auth_token):
             return 'Signature expired. Please log in again.'
         except jwt.InvalidTokenError:
             return 'Invalid token. Please log in again.'
+
+    def __repr__(self):
+        return f"<User {self.username}>"
