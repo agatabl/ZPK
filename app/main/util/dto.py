@@ -1,7 +1,6 @@
 from flask_restplus import Namespace, fields
 """"data transfer object"""
-"""responsible for carying objects between processes. W tym wypadku
-odpowiedzilany za marashalowanie danych dla zapytań API"""
+
 
 
 class UserDto:
